@@ -1,20 +1,18 @@
 package com.example.ammgolamyeazdani.calculator;
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ammgolamyeazdani.calculator.databinding.ActivityMainBinding
-import java.util.*
-import kotlin.collections.ArrayList as Lis
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityMainBinding
     var result: Float = 0f
+    var operation : String = ""
+    var isOperationAllowed = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +39,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.one -> {
                 if (binding.display.text != "") {
                     binding.display.append("1")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "1"
                 }
@@ -48,6 +47,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.two -> {
                 if (binding.display.text != "") {
                     binding.display.append("2")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "2"
                 }
@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.three -> {
                 if (binding.display.text != "") {
                     binding.display.append("3")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "3"
                 }
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.four -> {
                 if (binding.display.text != "") {
                     binding.display.append("4")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "4"
                 }
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.five -> {
                 if (binding.display.text != "") {
                     binding.display.append("5")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "5"
                 }
@@ -76,6 +79,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.six -> {
                 if (binding.display.text != "") {
                     binding.display.append("6")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "6"
                 }
@@ -83,6 +87,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.seven -> {
                 if (binding.display.text != "") {
                     binding.display.append("7")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "7"
                 }
@@ -90,6 +95,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.eight -> {
                 if (binding.display.text != "") {
                     binding.display.append("8")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "8"
                 }
@@ -97,6 +103,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.nine -> {
                 if (binding.display.text != "") {
                     binding.display.append("9")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "9"
                 }
@@ -104,36 +111,38 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.zero -> {
                 if (binding.display.text != "") {
                     binding.display.append("0")
+                    isOperationAllowed = true
                 } else {
                     binding.display.text = "0"
                 }
             }
+
             R.id.plus -> {
-                if (binding.display.text != "") {
+                if (binding.display.text != "" &&  isOperationAllowed ) {
                     binding.display.append("+")
-                } else {
-                    binding.display.text = "+"
+                    isOperationAllowed = false
+                    operation = "+"
                 }
             }
             R.id.div -> {
-                if (binding.display.text != "") {
+                if (binding.display.text != ""  &&  isOperationAllowed ) {
                     binding.display.append("%")
-                } else {
-                    binding.display.text = "%"
+                    isOperationAllowed = false
+                    operation = "%"
                 }
             }
             R.id.multi -> {
-                if (binding.display.text != "") {
+                if (binding.display.text != ""  &&  isOperationAllowed ) {
                     binding.display.append("x")
-                } else {
-                    binding.display.text = "x"
+                    isOperationAllowed = false
+                    operation = "x"
                 }
             }
             R.id.sub -> {
-                if (binding.display.text != "") {
+                if (binding.display.text != ""  &&  isOperationAllowed ) {
                     binding.display.append("-")
-                } else {
-                    binding.display.text = "-"
+                    isOperationAllowed = false
+                    operation = "-"
                 }
             }
             R.id.clear -> {
@@ -157,7 +166,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 if (binding.display.text != "") {
                     val s: String = binding.display.text.toString()
                     if (s.length > 0) {
-                        binding.display.setText(s.substring(0, s.length - 1))
+                        binding.display.text = s.substring(0, s.length - 1)
+
                     } else {
                         Toast.makeText(this, "Nothing to remove", Toast.LENGTH_SHORT).show()
                     }
@@ -170,7 +180,36 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun calculate(display: String) {
-        Toast.makeText(this, display, Toast.LENGTH_SHORT).show()
+
+
+
+        val fullExpression : String = binding.display.text.toString()
+
+        when (operation) {
+            "+" -> {
+                val splicedExpression : List<String> = fullExpression.split("+")
+                val result : Float = splicedExpression[0].toFloat() + splicedExpression[1].toFloat()
+                binding.display.text = result.toString()
+            }
+            "-" -> {
+                val splicedExpression : List<String> = fullExpression.split("-")
+                val result : Float = splicedExpression[0].toFloat() - splicedExpression[1].toFloat()
+                binding.display.text = result.toString()
+            }
+            "x" -> {
+                val splicedExpression : List<String> = fullExpression.split("x")
+                val result : Float = splicedExpression[0].toFloat() * splicedExpression[1].toFloat()
+                binding.display.text = result.toString()
+            }
+            "%" -> {
+                val splicedExpression : List<String> = fullExpression.split("%")
+                val result : Float = splicedExpression[0].toFloat() / splicedExpression[1].toFloat()
+                binding.display.text = result.toString()
+            }
+        }
+
+
+
     }
 
 }
